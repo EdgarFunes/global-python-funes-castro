@@ -9,4 +9,5 @@ Global de Programacion 1: Python
 - [Instalacion](#instalacion)
 - [Uso](#uso)
 - [Clases](#clases)
+- [AlgoMas]
 
