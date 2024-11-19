@@ -116,15 +116,13 @@ class Detector:
         return self.__simbolos_mutante
             
     
-class Mutador:
-    base_nitrogenada = ""
-    #! hay que utilizar estos atributos, segun sea necesario
-    atributo_1 = ""
-    atributo_2 = ""
-    
+class Mutador: 
     # Metodo constructor
-    def __init__(self) -> None:
-        pass
+    def __init__(self, base_nitrogenada, matriz) -> None:
+        self.__base_nitrogenada = base_nitrogenada
+        self.__matriz = matriz
+        detector = Detector()
+        self.__tiene_mutaciones = detector.detectar_mutantes(matriz)
     
     def crear_mutante() -> None:
         pass
