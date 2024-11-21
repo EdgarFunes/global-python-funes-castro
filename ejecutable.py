@@ -48,7 +48,15 @@ for repeticion in posiciones:
 
 mutador = Mutador("T", matriz)
 
-#radiacion= Radiacion(["A","C","G","T"],matriz)
-#posicion_inicial=(1,1)
-#radiacion.crear_mutante(["A","C","G","T"], posicion_inicial, "H")
+# radiacion= Radiacion(["A","C","G","T"],matriz)
+# posicion_inicial=(1,1)
+# radiacion.crear_mutante(["A","C","G","T"], posicion_inicial, "H")
+base_nitrogenada = ["A","C","G","T"]
+
+radiacion = Radiacion(base_nitrogenada, matriz)
+
+# crear mutante utiliza los parametros:
+
+radiacion.crear_mutante("A", [0, 0], "H")
+# radiacion.getAll()
 

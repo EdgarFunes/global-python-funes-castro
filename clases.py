@@ -1,3 +1,4 @@
+import traceback
 class Detector:   
     # Metodo constructor
     def __init__(self, base_nitrogenada = ["A", "C", "G", "T"]):
@@ -117,61 +118,60 @@ class Detector:
             
     
 class Mutador: 
-    # Metodo constructor
+    # Método constructor
     def __init__(self, base_nitrogenada, matriz) -> None:
-        self.__base_nitrogenada = base_nitrogenada
-        self.__matriz = matriz
+        self._base_nitrogenada = base_nitrogenada  # Atributo protegido
+        self._matriz = matriz  # Cambiado a protegido
         detector = Detector()
-        self.__tiene_mutaciones = detector.detectar_mutantes(matriz)
+        self._tiene_mutaciones = detector.detectar_mutantes(matriz)
     
     def crear_mutante() -> None:
         pass
-  
+
 class Radiacion(Mutador):
+    def __init__(self, base_nitrogenada, matriz, direccion="H", simbolo_mutante=None):
+        super().__init__(base_nitrogenada, matriz)
+        self.direccion = direccion # de la mutacion
+        self.simbolo_mutante = simbolo_mutante if simbolo_mutante else base_nitrogenada[0]
     
-    def __init__(self,base_nitrogenada,matriz,direccion="H",simbolo_mutante=None):
-        super().__init__(base_nitrogenada,matriz)
-        self.direccion=direccion #de la mutacion
-        self.simbolo_mutante=simbolo_mutante if simbolo_mutante else base_nitrogenada[0]
-        
-    
-    def crear_mutante(self,base_nitrogenada, posicion_inicial, orientacion_de_la_mutacion):
+    def crear_mutante(self, base_nitrogenada, posicion_inicial, orientacion_de_la_mutacion):
 
         try:
             #validamos la orientacion
             if orientacion_de_la_mutacion not in ["H","V"]:
                 raise ValueError("La orientacion de la mutacion debe ser 'H' o 'V'")
                                 
-            fila, columna=posicion_inicial
+            fila, columna = posicion_inicial
             #validamos posicion inicial
-            if fila < 0 or columna < 0 or fila >= len(self.__matriz) or columna >= len(self.__matriz[0]):
+            if fila < 0 or columna < 0 or fila >= len(self._matriz) or columna >= len(self._matriz[0]):
                 raise IndexError("La posisicion inicial esta fuera de los limitesde la matriz")
 
                 #Creamos el mutante horizontal o vertical segun la orientacin
             if orientacion_de_la_mutacion == "H":
-                if columna + 3 < len(self.__matriz[0]):
+                if columna + 3 < len(self._matriz[0]):
                     for i in range(4):
-                        self.__matriz[fila][columna + i]= base_nitrogenada
+                        self._matriz[fila][columna + i] = base_nitrogenada
                 else:
                     raise IndexError("No hay suficiente espacio para la matriz horizontal")
             elif orientacion_de_la_mutacion == "V":
-                if fila + 3 < len(self.__matriz):
+                if fila + 3 < len(self._matriz):
                     for i in range(4):
-                        self.__matriz[fila + i][columna]= base_nitrogenada
+                        self._matriz[fila + i][columna]= base_nitrogenada
                 else:
                     raise IndexError("No hay suficiente espaciop para la mutacion vertical")     
 
-            return self.__matriz #Devolvemos la matriz modificada  
+            return self._matriz #Devolvemos la matriz modificada  
 
         except Exception as e:
             print(f"Error al crear el mutante: {e}")
+            traceback.print_exc()
             return None
 
 class Virus(Mutador):
 
     def __init__(self,base_nitrogenada,matriz,direccion="ASC",simbolo_mutante=None):
         super().__init__(base_nitrogenada,matriz)
-        self.direccion=direccion #Direccion de la utacion, "ASC" o "DESC"
+        self.direccion=direccion #Direccion de la mutacion, "ASC" o "DESC"
         self.simbolo_mutante= simbolo_mutante if simbolo_mutante else base_nitrogenada[0] #Base por defecto
         
     def crear_mutante(self,base_nitrogenada, posicion_inicial):
@@ -179,24 +179,24 @@ class Virus(Mutador):
             fila,columna=posicion_inicial
 
             #Validos posiscion inicial
-            if fila < 0 or columna < 0 or fila >= len(self.__matriz) or columna >= len(self.__matriz[0]):
+            if fila < 0 or columna < 0 or fila >= len(self._matriz) or columna >= len(self._matriz[0]):
                 raise IndexError("La posicion inicial esta fuera de los limites de la matriz")
 
             #Creamos el mutante diagonal ascendente o descendente segun la orientacion  
             if self.direccion == "ASC":
                 if fila - 3 >= 0 and columna + 3 < len(self.__matriz[0]):
                     for i in range(4):
-                        self.__matriz[fila - i][columna + i]= base_nitrogenada
+                        self._matriz[fila - i][columna + i]= base_nitrogenada
                 else:
                     raise IndexError("No hay suficiente espacio para la mutacion diagonal ascendente")
             elif self.direccion == "DESC":       
-                if fila + 3 < len(self.__matriz) and columna + 3 < len(self.__matriz[0]):
+                if fila + 3 < len(self._matriz) and columna + 3 < len(self._matriz[0]):
                     for i in range(4):
-                        self.__matriz[fila + i][columna + i]= base_nitrogenada
+                        self._matriz[fila + i][columna + i]= base_nitrogenada
                 else:
                     raise IndexError("No hay suficiente espacio para la mutacion diagonal descendente")
             
-            return self.__matriz #Devolvemos la matriz modificada
+            return self._matriz #Devolvemos la matriz modificada
         
         except Exception as e:
             print(f"Error al crear mutante: {e}")
