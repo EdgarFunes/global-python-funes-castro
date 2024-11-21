@@ -135,7 +135,7 @@ class Radiacion(Mutador):
         self.simbolo_mutante=simbolo_mutante if simbolo_mutante else base_nitrogenada[0]
         
     
-    def crear_mutante(base_nitrogenada, posicion_inicial, orientacion_de_la_mutacion):
+    def crear_mutante(self,base_nitrogenada, posicion_inicial, orientacion_de_la_mutacion):
 
         try:
             #validamos la orientacion
