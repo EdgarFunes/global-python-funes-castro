@@ -126,39 +126,108 @@ class Mutador:
     
     def crear_mutante() -> None:
         pass
-    
+  
 class Radiacion(Mutador):
-    base_nitrogenada = ""
-    #! hay que utilizar estos atributos, segun sea necesario
-    atributo_1 = ""
-    atributo_2 = ""
     
-    def __init__(self) -> None:
-        super().__init__()
-        pass
+    def __init__(self,base_nitrogenada,matriz,direccion="H",simbolo_mutante=None):
+        super().__init__(base_nitrogenada,matriz)
+        self.direccion=direccion #de la mutacion
+        self.simbolo_mutante=simbolo_mutante if simbolo_mutante else base_nitrogenada[0]
+        
     
     def crear_mutante(base_nitrogenada, posicion_inicial, orientacion_de_la_mutacion):
-        pass
-    
+
+        try:
+            #validamos la orientacion
+            if orientacion_de_la_mutacion not in ["H","V"]:
+                raise ValueError("La orientacion de la mutacion debe ser 'H' o 'V'")
+                                
+            fila, columna=posicion_inicial
+            #validamos posicion inicial
+            if fila < 0 or columna < 0 or fila >= len(self.__matriz) or columna >= len(self.__matriz[0]):
+                raise IndexError("La posisicion inicial esta fuera de los limitesde la matriz")
+
+                #Creamos el mutante horizontal o vertical segun la orientacin
+            if orientacion_de_la_mutacion == "H":
+                if columna + 3 < len(self.__matriz[0]):
+                    for i in range(4):
+                        self.__matriz[fila][columna + i]= base_nitrogenada
+                else:
+                    raise IndexError("No hay suficiente espacio para la matriz horizontal")
+            elif orientacion_de_la_mutacion == "V":
+                if fila + 3 < len(self.__matriz):
+                    for i in range(4):
+                        self.__matriz[fila + i][columna]= base_nitrogenada
+                else:
+                    raise IndexError("No hay suficiente espaciop para la mutacion vertical")     
+
+            return self.__matriz #Devolvemos la matriz modificada  
+
+        except Exception as e:
+            print(f"Error al crear el mutante: {e}")
+            return None
+
 class Virus(Mutador):
-    base_nitrogenada = ""
-    #! hay que utilizar estos atributos, segun sea necesario
-    atributo_1 = ""
-    atributo_2 = ""
-    
-    def __init__(self) -> None:
-        super().__init__()
+
+    def __init__(self,base_nitrogenada,matriz,direccion="ASC",simbolo_mutante=None):
+        super().__init__(base_nitrogenada,matriz)
+        self.direccion=direccion #Direccion de la utacion, "ASC" o "DESC"
+        self.simbolo_mutante= simbolo_mutante if simbolo_mutante else base_nitrogenada[0] #Base por defecto
         
-    def crear_mutante(base_nitrogenada, posicion_inicial) -> None:
-        pass
-    
+    def crear_mutante(self,base_nitrogenada, posicion_inicial):
+        try:
+            fila,columna=posicion_inicial
+
+            #Validos posiscion inicial
+            if fila < 0 or columna < 0 or fila >= len(self.__matriz) or columna >= len(self.__matriz[0]):
+                raise IndexError("La posicion inicial esta fuera de los limites de la matriz")
+
+            #Creamos el mutante diagonal ascendente o descendente segun la orientacion  
+            if self.direccion == "ASC":
+                if fila - 3 >= 0 and columna + 3 < len(self.__matriz[0]):
+                    for i in range(4):
+                        self.__matriz[fila - i][columna + i]= base_nitrogenada
+                else:
+                    raise IndexError("No hay suficiente espacio para la mutacion diagonal ascendente")
+            elif self.direccion == "DESC":       
+                if fila + 3 < len(self.__matriz) and columna + 3 < len(self.__matriz[0]):
+                    for i in range(4):
+                        self.__matriz[fila + i][columna + i]= base_nitrogenada
+                else:
+                    raise IndexError("No hay suficiente espacio para la mutacion diagonal descendente")
+            
+            return self.__matriz #Devolvemos la matriz modificada
+        
+        except Exception as e:
+            print(f"Error al crear mutante: {e}")
+            return None
+        
+import random
 class Sanador:
-    #! hay que utilizar estos atributos, segun sea necesario
-    atributo_1 = ""
-    atributo_2 = ""
     
-    def __init__(self) -> None:
-        pass
+    def __init__(self, base_nitrogenada=["A","C","G","T"]):
+        self.base_nitrogenada=base_nitrogenada
+        self.detector=Detector(base_nitrogenada)
     
-    def sanar_mutantes(matriz):
-        pass
+    def sanar_mutantes(self,matriz):
+        
+        try:
+            #Comprobamos si hay mutaciones en la matriz
+            if self.detector.detectar_mutantes(matriz):
+                print("Mutacion detectada, se generara uno sin mutaciones")
+
+                #Generamos uno nuevo sin mutaciones
+                nuevo_adn=self.generar_adn_sin_mutaciones(len(matriz), len(matriz[0]))
+                return nuevo_adn #DEvolvemos el nuevo adn sin mutaciones
+
+            else:
+                print("No se detectaron mutaciones en el adn")
+                return matriz #Si no hay mutaciones retornamos la matriz original
+        
+        except Exception as e:
+            print(f"Error al sanr mutantes: {e}")
+            return None
+    
+    def generar_adn_sin_mutaciones(self,filas,columnas):
+        #Generamos un nuevo adn aleatori con las bases nitrogenadas validas
+        return [[random.choice(self.base_nitrogenada) for _ in range(columnas)] for _ in range(filas)]
