@@ -1,4 +1,4 @@
-import traceback
+import traceback, random
 class Detector:   
     # Metodo constructor
     def __init__(self, base_nitrogenada = ["A", "C", "G", "T"]):
@@ -169,14 +169,14 @@ class Radiacion(Mutador):
 
 class Virus(Mutador):
 
-    def __init__(self,base_nitrogenada,matriz,direccion="ASC",simbolo_mutante=None):
+    def __init__(self, base_nitrogenada, matriz, direccion="ASC", simbolo_mutante=None):
         super().__init__(base_nitrogenada,matriz)
-        self.direccion=direccion #Direccion de la mutacion, "ASC" o "DESC"
-        self.simbolo_mutante= simbolo_mutante if simbolo_mutante else base_nitrogenada[0] #Base por defecto
+        self.direccion=direccion # Direccion de la mutacion, "ASC" o "DESC"
+        self.simbolo_mutante= simbolo_mutante if simbolo_mutante else base_nitrogenada[0] # Base por defecto
         
     def crear_mutante(self,base_nitrogenada, posicion_inicial):
         try:
-            fila,columna=posicion_inicial
+            fila, columna = posicion_inicial
 
             #Validos posiscion inicial
             if fila < 0 or columna < 0 or fila >= len(self._matriz) or columna >= len(self._matriz[0]):
@@ -184,7 +184,7 @@ class Virus(Mutador):
 
             #Creamos el mutante diagonal ascendente o descendente segun la orientacion  
             if self.direccion == "ASC":
-                if fila - 3 >= 0 and columna + 3 < len(self.__matriz[0]):
+                if fila - 3 >= 0 and columna + 3 < len(self._matriz[0]):
                     for i in range(4):
                         self._matriz[fila - i][columna + i]= base_nitrogenada
                 else:
@@ -201,8 +201,6 @@ class Virus(Mutador):
         except Exception as e:
             print(f"Error al crear mutante: {e}")
             return None
-        
-import random
 class Sanador:
     
     def __init__(self, base_nitrogenada=["A","C","G","T"]):
@@ -217,7 +215,7 @@ class Sanador:
                 print("Mutacion detectada, se generara uno sin mutaciones")
 
                 #Generamos uno nuevo sin mutaciones
-                nuevo_adn=self.generar_adn_sin_mutaciones(len(matriz), len(matriz[0]))
+                nuevo_adn=self.__generar_adn_sin_mutaciones(len(matriz), len(matriz[0]))
                 return nuevo_adn #DEvolvemos el nuevo adn sin mutaciones
 
             else:
@@ -228,6 +226,6 @@ class Sanador:
             print(f"Error al sanr mutantes: {e}")
             return None
     
-    def generar_adn_sin_mutaciones(self,filas,columnas):
+    def __generar_adn_sin_mutaciones(self,filas,columnas):
         #Generamos un nuevo adn aleatori con las bases nitrogenadas validas
         return [[random.choice(self.base_nitrogenada) for _ in range(columnas)] for _ in range(filas)]
