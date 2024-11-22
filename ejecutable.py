@@ -112,10 +112,63 @@ def detectar_mutaciones(matriz) -> None:
 
 def mutar_adn(matriz) -> None:
     #Pedir al usuario que escoja una radiacion o virus
-    pass
+    print("Elegir que tipo de mutacion desea realir")
+    print("1)Mutacion horizontal(Radiacion)")
+    print("2)Mutacion verticañ(Radiacion)")
+    print("3)Mutacion ascendente(Virus)")
+    print("4)Mutacion descendente(Virus)")
 
-def sanar_adn() -> None:
-    pass
+    try:
+        opcion_de_la_mutacion= int(input("Elija una opcion del 1 al 4:"))
+        if opcion_de_la_mutacion not in [1,2,3,4]:
+            print("Opcion incorrecta, elegir entre el 1 y el 4")
+            return
+        
+        fila= int(input("Ingrese la fila de inicio de la mutacion (0-5):"))
+        columna=int(input("Ingrese la columna de inicio de la mutacion (0-5):"))
+
+        #Para la mutacion radiacion(horizontal o vertical)
+        if opcion_de_la_mutacion == 1 or opcion_de_la_mutacion == 2 :
+            direccion="H" if opcion_de_la_mutacion == 1 else "V"
+            simbolo= input("Ingrese el simbolo para la mutacion (X por defecto):")
+            simbolo=simbolo if simbolo else "X"
+            radiacion=Radiacion(["A","C","G","T"],matriz,direccion,simbolo)
+            nueva_matriz=radiacion.crear_mutante(["A","C","G","T"],(fila,columna),direccion)
+            if nueva_matriz:
+                print("Mutacion realizada, ADN mutado")
+                imprimir_secuencia(nueva_matriz)
+            else:
+                print("Error al realizar la mutacion")
+
+        #Para la mutacion Virus(Diagonal ascendente o descendente)
+        elif opcion_de_la_mutacion == 3 or opcion_de_la_mutacion == 4:
+            direccion="ASC" if opcion_de_la_mutacion==3 else "DESC"
+            simbolo=input("Ingrese el simbolo para la mutacion(Y por defecto):")
+            simbolo=simbolo if simbolo else "Y"
+            virus=Virus(["A","C","G","T"],matriz,direccion,simbolo)
+            nueva_matriz=virus.crear_mutante(["A","C","G","T"],(fila,columna))
+            if nueva_matriz:
+                print("Mutacion realizada, ADN mutado")
+                imprimir_secuencia(nueva_matriz)
+            else:
+                print("Eror al realizar la mutacion")
+
+
+    except ValueError:
+        print("Opcion incorrecta, agurese de ingresar un numero")
+ 
+
+def sanar_adn(matriz) -> None:
+    print("verificando mutaciones...")
+    sanador=Sanador(["A","C","G","T"])
+    matriz_sanada=sanador.sanar_mutantes(matriz)
+
+    if matriz_sanada:
+        print("ADN sanado, hay nueva secuencia:")
+        imprimir_secuencia(matriz_sanada)
+    else:
+        print("No se detectaron mutaciones, el ADN esta limpio")
+    
 
 
 
