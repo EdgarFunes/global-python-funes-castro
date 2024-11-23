@@ -1,49 +1,49 @@
-from clases import Detector, Mutador, Radiacion, Virus
+from funciones import mostrar_mensaje, imprimir_secuencia, ingresar_matriz, detectar_mutaciones, mutar_adn, sanar_adn
+import traceback
 
-# Imprime el arreglo que se envie por parametro
-def imprimir_secuencia(array):
-    print("Secuencia ingresada:")
-    for x in array:
-        print("  ".join(x))
-
-# Secuencia a utilizar
-matriz = [
-    "TTTTCG",
-    "TCTTGA",
-    "CACGAT",
-    "TAGCTA",
-    "GACGGA",
-    "TACAAA"
-]
+mostrar_mensaje("Programa ADN")
+matriz = ingresar_matriz()
 imprimir_secuencia(matriz)
+opcion = -1      
+while opcion != 0:
+    print("------------------------------", end="")
+    try:
+        opcion = int(input("""
+          Que desea hacer?
+          1) Detectar mutaciones
+          2) Mutar el ADN
+          3) Sanar el ADN
+          4) Mostrar ADN
+          0) Salir
+          Escoja una opcion: """))
+        if type(opcion) != int:
+            raise TypeError("Debe ingresar un numero")
+        elif not opcion in [1,2,3,0,4]:
+            raise TypeError("Debe ingresar un numero entre 0 y 3")
+        else:
+            if opcion == 0: break
+            #codigo
 
-detector = Detector()
-
-detector.verificar_base_nitrogenada(matriz)
-if detector.detectar_mutantes(matriz):
-    print("Mutante detectado")
-else:
-    print("No se detectaron mutaciones")
-    
-    print("Mutante detectado" if detector.detectar_mutantes(matriz) else "No se detectaron mutantes")
-
-print("")
-
-# Aqui podemos ver las bases nitrogenadas repetidas
-simbolos = detector.get_simbolos_mutante()
-print(simbolos)
-print("")
-
-# De esta forma se pueden obtener las posiciones de las mutaciones
-# matriz[posicion[0]][posicion[1]] mostraria el valor de la celda
-# posicion[0] o posicion[1] mostrarian el valor de filas y columnas de cada mutacion
-print("Todas las mutaciones encontradas y almacenadas")
-posiciones = detector.get_posiciones_repetidas()
-for repeticion in posiciones:
-    print(repeticion)
-    for posicion in repeticion:
-        print(matriz[posicion[0]][posicion[1]], end=", ")
-    print("\n")
-
-
-mutador = Mutador("T", matriz)
+            if opcion == 1:
+                detectar_mutaciones(matriz)
+            elif opcion == 2:
+                nueva_matriz = mutar_adn(matriz)
+                if nueva_matriz: matriz = nueva_matriz
+            elif opcion == 3:
+                matriz = sanar_adn(matriz)
+            elif opcion == 4:
+                imprimir_secuencia(matriz)
+            else:
+                raise TypeError("Debe ingresar un numero")
+            
+            #codigo
+    except TypeError as e:
+        mostrar_mensaje(e)
+        #traceback.print_exc()
+    except ValueError:
+        mostrar_mensaje("Debe ingresar un numero")
+    except Exception as e:
+        print(e)
+        #traceback.print_exc()
+        
+print("Saliendo del programa....")
