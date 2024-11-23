@@ -121,10 +121,10 @@ class Mutador:
     # Método constructor
     def __init__(self, base_nitrogenada, matriz) -> None:
         self._base_nitrogenada = base_nitrogenada  # Atributo protegido
-        self._matriz = matriz  # Cambiado a protegido
+        self._matriz = matriz # Cambiado a protegido
         detector = Detector()
         self._tiene_mutaciones = detector.detectar_mutantes(matriz)
-    
+            
     def crear_mutante() -> None:
         pass
 
@@ -144,7 +144,7 @@ class Radiacion(Mutador):
             fila, columna = posicion_inicial
             #validamos posicion inicial
             if fila < 0 or columna < 0 or fila >= len(self._matriz) or columna >= len(self._matriz[0]):
-                raise IndexError("La posisicion inicial esta fuera de los limitesde la matriz")
+                raise IndexError("La posisicion inicial esta fuera de los limites de la matriz")
 
                 #Creamos el mutante horizontal o vertical segun la orientacin
             if orientacion_de_la_mutacion == "H":
@@ -158,14 +158,14 @@ class Radiacion(Mutador):
                     for i in range(4):
                         self._matriz[fila + i][columna]= base_nitrogenada
                 else:
-                    raise IndexError("No hay suficiente espaciop para la mutacion vertical")     
-
+                    raise IndexError("No hay suficiente espaciop para la mutacion vertical")  
             return self._matriz #Devolvemos la matriz modificada  
 
         except Exception as e:
             print(f"Error al crear el mutante: {e}")
-            traceback.print_exc()
-            return None
+            return []
+        except IndexError as e:
+            print(f"Error al crear el mutante: {e}")
 
 class Virus(Mutador):
 
@@ -213,10 +213,12 @@ class Sanador:
             #Comprobamos si hay mutaciones en la matriz
             if self.detector.detectar_mutantes(matriz):
                 print("Mutacion detectada, se generara uno sin mutaciones")
-
+                # Repetimos el metodo hasta que no existan mutaciones
+                while self.detector.detectar_mutantes(matriz):
+                    matriz = self.__generar_adn_sin_mutaciones(len(matriz), len(matriz[0]))
+                    
                 #Generamos uno nuevo sin mutaciones
-                nuevo_adn=self.__generar_adn_sin_mutaciones(len(matriz), len(matriz[0]))
-                return nuevo_adn #DEvolvemos el nuevo adn sin mutaciones
+                return matriz #DEvolvemos el nuevo adn sin mutaciones
 
             else:
                 print("No se detectaron mutaciones en el adn")
